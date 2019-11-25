@@ -1,26 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import ReactFC from "react-fusioncharts";
+import FusionCharts from "fusioncharts";
+import Charts from "fusioncharts/fusioncharts.charts";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
+
+class Chart extends Component {
+  constructor(props) {
+    super(props);
+
+    ReactFC.fcRoot(FusionCharts, Charts, FusionTheme);
+    //this.Transporter=this.Transporter.bind(this);
+    this.state = {
+      dataList: []
+    };
+    this.state.dataList.push({ time: this.props.time, ecg: this.props.ecg });
+  }
+
+  render() {
+    var chartConfigs = {
+      type: "line",
+      width: 700,
+      dataFormat: "json",
+      dataSource: {
+        chart: {
+          caption: "Health Data",
+          xAxisName: "Time",
+          yAxisName: "ECG Data",
+          theme: "fusion",
+          labelDisplay: "Auto",
+          useEllipsesWhenOverflow: "0"
+        },
+        data: this.state.dataList
+      }
+    };
+
+    return (
+      <div style={{ padding: 20 }}>
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <h1>ECG Data Visualiser Client</h1>
+        </div>
+
+        <ReactFC width="700" {...chartConfigs} />
+      </div>
+    );
+  }
 }
 
-export default App;
+export default Chart;
